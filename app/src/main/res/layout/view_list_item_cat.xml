@@ -4,12 +4,15 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <ImageView
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/iv_view_list_item_cat"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:contentDescription="@string/cat_list_item"
+        android:scaleType="center"
+        app:elevation="@dimen/card_elevation"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:contentDescription="@string/cat_list_item"/>
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
