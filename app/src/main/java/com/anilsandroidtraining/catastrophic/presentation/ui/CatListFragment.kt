@@ -1,4 +1,4 @@
-package com.anilsandroidtraining.catastrophic
+package com.anilsandroidtraining.catastrophic.presentation.ui
 
 import android.os.Bundle
 import android.view.LayoutInflater

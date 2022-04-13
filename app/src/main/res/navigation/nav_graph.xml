@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/CatListFragment"
-        android:name="com.anilsandroidtraining.catastrophic.CatListFragment"
+        android:name="com.anilsandroidtraining.catastrophic.presentation.ui.CatListFragment"
         android:label="@string/cat_list_label"
         tools:layout="@layout/fragment_cat_list">
 
@@ -17,7 +17,7 @@
     </fragment>
     <fragment
         android:id="@+id/CatDetailFragment"
-        android:name="com.anilsandroidtraining.catastrophic.CatDetailFragment"
+        android:name="com.anilsandroidtraining.catastrophic.presentation.ui.CatDetailFragment"
         android:label="@string/cat_detail_label"
         tools:layout="@layout/fragment_cat_detail" />
 </navigation>
