@@ -5,10 +5,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.anilsandroidtraining.catastrophic.databinding.FragmentCatListBinding
-import com.anilsandroidtraining.catastrophic.presentation.model.UiCat
+import com.anilsandroidtraining.catastrophic.presentation.CatListState.Success
+import com.anilsandroidtraining.catastrophic.presentation.CatsViewModel
 import com.anilsandroidtraining.catastrophic.presentation.model.UiCatModel
 
 class CatListFragment : Fragment() {
@@ -17,21 +19,7 @@ class CatListFragment : Fragment() {
     private val binding get() = _binding!!
     private lateinit var catListAdapter: CatListAdapter
 
-    //TODO remove this once the real data is is in place fake data
-    private val uiCatModel: UiCatModel = UiCatModel()
-
-    init {
-        //TODO remove this once the real data is is in place fake data
-        uiCatModel.cats = listOf(
-            UiCat("1", "blabla", 480, 480),
-            UiCat("2", "blabla2", 480, 480),
-            UiCat("4234", "blabla2", 480, 480),
-            UiCat("22342", "blabla2", 480, 480),
-            UiCat("242", "blabla2", 480, 480),
-            UiCat("3", "blabla3", 480, 480)
-        )
-
-    }
+    private val viewModel: CatsViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -47,9 +35,25 @@ class CatListFragment : Fragment() {
 
         binding.recyclerViewCatList.layoutManager = gridLayoutManager
         catListAdapter = CatListAdapter()
-        catListAdapter.addCatList(uiCatModel.cats)
+
         binding.recyclerViewCatList.adapter = catListAdapter
         return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        viewModel.catListState.observe(viewLifecycleOwner) {
+            when (it) {
+                is Success -> showContentView(it.uiModel)
+                else -> {
+                    //Do nothing
+                }
+            }
+        }
+    }
+
+    private fun showContentView(uiModel: UiCatModel) {
+        catListAdapter.addCatList(uiModel.cats)
     }
 
     override fun onDestroyView() {
