@@ -9,7 +9,7 @@ android {
     compileSdk 31
 
     defaultConfig {
-        applicationId "com.anilsandroidtraining.catastrophic"
+        applicationId "com.zaloracasestudy.catastrophic"
         minSdk 22
         targetSdk 31
         versionCode 1
