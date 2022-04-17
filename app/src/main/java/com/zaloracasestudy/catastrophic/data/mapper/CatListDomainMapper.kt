@@ -1,5 +1,6 @@
 package com.zaloracasestudy.catastrophic.data.mapper
 
+import android.util.Log
 import com.zaloracasestudy.catastrophic.data.model.CatDataModel
 import com.zaloracasestudy.catastrophic.domain.mapper.Mapper
 import com.zaloracasestudy.catastrophic.domain.model.Cat
@@ -14,7 +15,9 @@ class CatListDomainMapper : Mapper<List<CatDataModel>?, List<Cat>?> {
             it.height,
             emptyList(), // Avoiding mapping Breeds as we are not using it
             emptyList(), // Avoiding mapping Categories as we are not using it
-        )
+        ).also {
+            Log.i("***", "CatlistDomainMapper = $it")
+        }
     }
 
 }

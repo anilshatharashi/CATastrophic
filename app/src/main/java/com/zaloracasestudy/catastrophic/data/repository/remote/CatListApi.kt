@@ -16,7 +16,7 @@ interface CatListApi {
         @Query("limit") limit: Int = LIMIT_PER_PAGE,
         @Query("order") order: String = ORDER_BY,
         @Query("mime_types") mimeTypes: String = MIME_TYPES,
-    ): Flow<List<CatDataModel>>
+    ): List<CatDataModel>
 
     companion object {
         const val LIMIT_PER_PAGE = 20
