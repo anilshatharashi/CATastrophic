@@ -31,16 +31,18 @@ class CatListAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     override fun getItemCount(): Int = catList.size
 
-    fun addCatList(list: List<UiCat>) {
-        catList.addAll(list)
-        notifyDataSetChanged()
+    fun addCatList(list: List<UiCat>?) {
+        list?.let {
+            catList.addAll(it)
+            notifyDataSetChanged()
+        }
     }
 
     class CatItemViewHolder(private val binding: ViewListItemCatBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
         fun bindTo(uiCat: UiCat) {
-            binding.ivViewListItemCat.text = uiCat.id
+            uiCat.url?.let { binding.ivViewListItemCat.loadFromUrl(it) }
         }
     }
 

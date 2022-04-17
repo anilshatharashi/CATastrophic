@@ -1,16 +1,17 @@
 package com.zaloracasestudy.catastrophic.presentation
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.zaloracasestudy.catastrophic.domain.mapper.Mapper
-import com.zaloracasestudy.catastrophic.domain.model.CatsModel
+import com.zaloracasestudy.catastrophic.domain.model.Cat
+import com.zaloracasestudy.catastrophic.domain.usecase.GetCatsUseCase
 import com.zaloracasestudy.catastrophic.presentation.CatListState.Failure
 import com.zaloracasestudy.catastrophic.presentation.CatListState.Success
-import com.zaloracasestudy.catastrophic.presentation.model.UiCatModel
-import com.zaloracasestudy.catastrophic.domain.usecase.GetCatsUseCase
+import com.zaloracasestudy.catastrophic.presentation.model.UiCat
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collectLatest
@@ -20,7 +21,7 @@ import javax.inject.Inject
 @HiltViewModel
 class CatsViewModel @Inject constructor(
     private val getCatsUseCase: GetCatsUseCase,
-    private val mapper: Mapper<CatsModel?, UiCatModel>,
+    private val mapper: Mapper<List<Cat>?, List<UiCat>?>,
 ) : ViewModel() {
 
     val pageIndex = MutableLiveData(1)
@@ -29,10 +30,10 @@ class CatsViewModel @Inject constructor(
     val catListState: LiveData<CatListState> = _catListState.asLiveData()
 
     init {
-        pageIndex.observeForever { fetchCatsList() }
+        pageIndex.observeForever { fetchCatList() }
     }
 
-    fun fetchCatsList() {
+    fun fetchCatList() {
         val currentPage = pageIndex.value ?: 1
 
         viewModelScope.launch {
@@ -47,8 +48,9 @@ class CatsViewModel @Inject constructor(
         }
     }
 
-    private fun handleSuccess(catsModel: CatsModel): Success {
-        val uiModel = mapper.mapFrom(catsModel)
+    private fun handleSuccess(list: List<Cat>?): Success {
+        val uiModel = mapper.mapFrom(list)
+        Log.i("***", "uiModel = $uiModel")
         return Success(uiModel)
     }
 

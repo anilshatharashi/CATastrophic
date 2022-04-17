@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.zaloracasestudy.catastrophic.databinding.FragmentCatListBinding
 import com.zaloracasestudy.catastrophic.presentation.CatListState.Success
 import com.zaloracasestudy.catastrophic.presentation.CatsViewModel
-import com.zaloracasestudy.catastrophic.presentation.model.UiCatModel
+import com.zaloracasestudy.catastrophic.presentation.model.UiCat
 
 class CatListFragment : Fragment() {
 
@@ -44,7 +44,7 @@ class CatListFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         viewModel.catListState.observe(viewLifecycleOwner) {
             when (it) {
-                is Success -> showContentView(it.uiModel)
+                is Success -> showContentView(it.catList)
                 else -> {
                     //Do nothing
                 }
@@ -52,8 +52,8 @@ class CatListFragment : Fragment() {
         }
     }
 
-    private fun showContentView(uiModel: UiCatModel) {
-        catListAdapter.addCatList(uiModel.cats)
+    private fun showContentView(list: List<UiCat>?) {
+        catListAdapter.addCatList(list)
     }
 
     override fun onDestroyView() {

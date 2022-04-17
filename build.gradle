@@ -5,6 +5,10 @@ buildscript {
     ext.lifecycleVersion = '2.4.1'
     ext.mockkVersion = '1.12.3'
     ext.coroutinesVersion = '1.4.2'
+    ext.retrofitVersion = '2.9.0'
+    ext.retrofitGsonConverterVersion = '2.5.0'
+    ext.glideVersion = '4.8.0'
+    ext.gsonVersion = '2.8.9'
 
     dependencies {
         classpath "com.google.dagger:hilt-android-gradle-plugin:$hiltVersion"

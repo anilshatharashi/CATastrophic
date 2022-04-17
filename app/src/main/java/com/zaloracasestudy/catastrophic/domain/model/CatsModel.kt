@@ -1,12 +1,5 @@
 package com.zaloracasestudy.catastrophic.domain.model
 
-data class CatsModel(
-    var page: Int = 1,
-    var cats: List<Cat> = emptyList(),
-    var totalPages: Int = 1,
-    var order: String? = "Asc",
-)
-
 data class Cat(
     val id: String? = null,
     val url: String? = null,

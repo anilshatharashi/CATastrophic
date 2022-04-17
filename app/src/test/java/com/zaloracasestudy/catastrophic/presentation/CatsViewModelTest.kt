@@ -3,7 +3,6 @@ package com.zaloracasestudy.catastrophic.presentation
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Observer
 import com.zaloracasestudy.catastrophic.domain.model.Cat
-import com.zaloracasestudy.catastrophic.domain.model.CatsModel
 import com.zaloracasestudy.catastrophic.domain.usecase.GetCatsUseCase
 import com.zaloracasestudy.catastrophic.presentation.CatListState.Success
 import com.zaloracasestudy.catastrophic.presentation.mapper.CatListUiMapper
@@ -18,7 +17,7 @@ import org.junit.Test
 
 class CatsViewModelTest {
 
-    private lateinit var catsModelFlow: MutableSharedFlow<CatsModel?>
+    private lateinit var catList: MutableSharedFlow<List<Cat>?>
     private lateinit var viewModel: CatsViewModel
     private lateinit var getCatsListUseCase: GetCatsUseCase
     private lateinit var uiMapper: CatListUiMapper
@@ -29,10 +28,10 @@ class CatsViewModelTest {
     @Before
     fun setUp() {
         getCatsListUseCase = mockk()
-        catsModelFlow = MutableSharedFlow()
+        catList = MutableSharedFlow()
 
         uiMapper = CatListUiMapper()
-        coEvery { getCatsListUseCase.execute(1) } returns catsModelFlow
+        coEvery { getCatsListUseCase.execute(1) } returns catList
 
         viewModel = CatsViewModel(getCatsListUseCase, uiMapper)
     }
@@ -41,8 +40,8 @@ class CatsViewModelTest {
     fun `page should be error page if null is returned`() {
 
         observeState {
-            viewModel.fetchCatsList()
-            runBlocking { catsModelFlow.emit(null) }
+            viewModel.fetchCatList()
+            runBlocking { catList.emit(null) }
             verify { it.onChanged(CatListState.Failure(ErrorFetchingCatsData)) }
         }
     }
@@ -52,13 +51,13 @@ class CatsViewModelTest {
         // GIVEN I select a catList id
 
         observeState {
-            viewModel.fetchCatsList()
+            viewModel.fetchCatList()
 
             // WHEN I catList is emitted
-            val catList = CatsModel(1, listOf(Cat(),
+            val catList = listOf(Cat(),
                 Cat(),
-                Cat()))
-            runBlocking { catsModelFlow.emit(catList) }
+                Cat())
+            runBlocking { this@CatsViewModelTest.catList.emit(catList) }
 
             // THEN it should be observed
             verify(exactly = 1) {
@@ -70,24 +69,20 @@ class CatsViewModelTest {
     @Test
     fun `getCatsListData should only emit catLists for the last requested id`() {
         // GIVEN there are two catList ids
-        val firstPageFlow = MutableSharedFlow<CatsModel>()
-        val secondPageFlow = MutableSharedFlow<CatsModel>()
+        val firstPageFlow = MutableSharedFlow<List<Cat>>()
+        val secondPageFlow = MutableSharedFlow<List<Cat>>()
 
         coEvery { getCatsListUseCase.execute(1) } returns firstPageFlow
         coEvery { getCatsListUseCase.execute(1) } returns secondPageFlow
 
         observeState {
             // WHEN I subscribe first to one, then to the second
-            viewModel.fetchCatsList()
-            viewModel.fetchCatsList()
+            viewModel.fetchCatList()
+            viewModel.fetchCatList()
 
             // AND there is a catList for both ids
-            val list1 = CatsModel(
-                cats = listOf(Cat(), Cat(id = "42"), Cat(id = "52"))
-            )
-            val list2 = CatsModel(
-                cats = listOf(Cat(id = "382"), Cat(id = "242"), Cat(id = "2542"))
-            )
+            val list1 = listOf(Cat(), Cat(id = "42"), Cat(id = "52"))
+            val list2 =listOf(Cat(id = "382"), Cat(id = "242"), Cat(id = "2542"))
             runBlocking {
                 firstPageFlow.emit(list1)
                 secondPageFlow.emit(list2)
