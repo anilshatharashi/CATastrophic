@@ -1,11 +1,6 @@
 package com.zaloracasestudy.catastrophic.presentation
 
-import android.util.Log
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.asLiveData
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import com.zaloracasestudy.catastrophic.domain.mapper.Mapper
 import com.zaloracasestudy.catastrophic.domain.model.Cat
 import com.zaloracasestudy.catastrophic.domain.usecase.GetCatsUseCase
@@ -21,10 +16,18 @@ import javax.inject.Inject
 @HiltViewModel
 class CatsViewModel @Inject constructor(
     private val getCatsUseCase: GetCatsUseCase,
-    private val mapper: Mapper<List<Cat>?, List<UiCat>?>,
+    private val mapper: Mapper<List<Cat>, List<UiCat>>,
 ) : ViewModel() {
 
     val pageIndex = MutableLiveData(1)
+    private val _isLastPage = MutableLiveData(false)
+    val isLastPage: LiveData<Boolean> = _isLastPage
+
+    private val _isLoading = MutableLiveData(false)
+    val isLoading: LiveData<Boolean> = _isLoading
+
+    private val _isNextPageLoading = MutableLiveData(false)
+    val isNextPageLoading: LiveData<Boolean> = _isNextPageLoading
 
     private val _catListState = MutableStateFlow<CatListState>(CatListState.Loading)
     val catListState: LiveData<CatListState> = _catListState.asLiveData()
@@ -35,6 +38,7 @@ class CatsViewModel @Inject constructor(
 
     fun fetchCatList() {
         val currentPage = pageIndex.value ?: 1
+        if (currentPage > 1) _isNextPageLoading.postValue(true)
 
         viewModelScope.launch {
             try {
@@ -48,10 +52,10 @@ class CatsViewModel @Inject constructor(
         }
     }
 
-    private fun handleSuccess(list: List<Cat>?): Success {
-        val uiModel = mapper.mapFrom(list)
-        Log.i("***", "uiModel = $uiModel")
-        return Success(uiModel)
+    private fun handleSuccess(list: List<Cat>): Success {
+        _isLastPage.postValue(false)
+        _isNextPageLoading.postValue(false)
+        return Success(mapper.mapFrom(list))
     }
 
 }

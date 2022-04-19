@@ -4,7 +4,7 @@ import com.zaloracasestudy.catastrophic.presentation.model.UiCat
 
 sealed class CatListState {
     object Loading : CatListState()
-    data class Success(val catList: List<UiCat>?) : CatListState()
+    data class Success(val catList: List<UiCat>) : CatListState()
     data class Failure(val error: Exception) : CatListState()
 }
 

@@ -18,7 +18,7 @@ object DomainModule {
 
     @ViewModelScoped
     @Provides
-    fun provideCatListUiMapper(): Mapper<List<Cat>?, List<UiCat>?> = CatListUiMapper()
+    fun provideCatListUiMapper(): Mapper<List<Cat>, List<UiCat>> = CatListUiMapper()
 
     @Provides
     @ViewModelScoped
