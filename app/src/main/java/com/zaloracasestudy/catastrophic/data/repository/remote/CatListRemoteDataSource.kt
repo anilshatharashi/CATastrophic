@@ -1,9 +1,9 @@
 package com.zaloracasestudy.catastrophic.data.repository.remote
 
-import com.zaloracasestudy.catastrophic.data.model.CatDataModel
+import com.zaloracasestudy.catastrophic.data.model.CatDTO
 import kotlinx.coroutines.flow.Flow
 
 interface CatListRemoteDataSource {
 
-    suspend fun fetchCatListData(pageIndex: Int): Flow<List<CatDataModel>?>
+    suspend fun fetchCatListData(pageIndex: Int): List<CatDTO>
 }

@@ -1,7 +1,8 @@
 package com.zaloracasestudy.catastrophic.di
 
+import com.zaloracasestudy.catastrophic.data.dao.CatDao
+import com.zaloracasestudy.catastrophic.data.entities.CatEntity
 import com.zaloracasestudy.catastrophic.data.mapper.CatListDomainMapper
-import com.zaloracasestudy.catastrophic.data.model.CatDataModel
 import com.zaloracasestudy.catastrophic.data.repository.CatListRepositoryImpl
 import com.zaloracasestudy.catastrophic.data.repository.remote.CatListRemoteDataSource
 import com.zaloracasestudy.catastrophic.domain.CatListRepository
@@ -19,14 +20,15 @@ object RepositoryModule {
 
     @Singleton
     @Provides
-    fun provideCatListListDomainMapper(): Mapper<List<CatDataModel>?, List<Cat>?> =
+    fun provideCatListDomainMapper(): Mapper<List<CatEntity>, List<Cat>> =
         CatListDomainMapper()
 
     @Singleton
     @Provides
     fun provideCatListRepository(
         remoteDataSource: CatListRemoteDataSource,
-        mapper: Mapper<List<CatDataModel>?, List<Cat>?>,
-    ): CatListRepository = CatListRepositoryImpl(remoteDataSource, mapper)
+        catDao: CatDao,
+        mapper: Mapper<List<CatEntity>, List<Cat>>,
+    ): CatListRepository = CatListRepositoryImpl(remoteDataSource, catDao, mapper)
 
 }

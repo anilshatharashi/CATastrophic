@@ -85,6 +85,11 @@ dependencies {
     // OkHttp Logging interceptor
     implementation 'com.squareup.okhttp3:logging-interceptor:4.9.0'
 
+    //Room
+    implementation "androidx.room:room-runtime:$roomVersion"
+    kapt "androidx.room:room-compiler:$roomVersion"
+    implementation "androidx.room:room-ktx:$roomVersion"
+
     //Glide
     implementation "com.github.bumptech.glide:glide:$glideVersion"
 

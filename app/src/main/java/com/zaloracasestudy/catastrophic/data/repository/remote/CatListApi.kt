@@ -1,7 +1,6 @@
 package com.zaloracasestudy.catastrophic.data.repository.remote
 
-import com.zaloracasestudy.catastrophic.data.model.CatDataModel
-import kotlinx.coroutines.flow.Flow
+import com.zaloracasestudy.catastrophic.data.model.CatDTO
 import retrofit2.http.GET
 import retrofit2.http.Query
 
@@ -16,7 +15,7 @@ interface CatListApi {
         @Query("limit") limit: Int = LIMIT_PER_PAGE,
         @Query("order") order: String = ORDER_BY,
         @Query("mime_types") mimeTypes: String = MIME_TYPES,
-    ): List<CatDataModel>
+    ): List<CatDTO>
 
     companion object {
         const val LIMIT_PER_PAGE = 20

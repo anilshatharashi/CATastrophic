@@ -1,13 +1,13 @@
 package com.zaloracasestudy.catastrophic.data.mapper
 
 import android.util.Log
-import com.zaloracasestudy.catastrophic.data.model.CatDataModel
+import com.zaloracasestudy.catastrophic.data.entities.CatEntity
 import com.zaloracasestudy.catastrophic.domain.mapper.Mapper
 import com.zaloracasestudy.catastrophic.domain.model.Cat
 
-class CatListDomainMapper : Mapper<List<CatDataModel>?, List<Cat>?> {
+class CatListDomainMapper : Mapper<List<CatEntity>, List<Cat>> {
 
-    override fun mapFrom(from: List<CatDataModel>?): List<Cat>? =  from?.map {
+    override fun mapFrom(from: List<CatEntity>): List<Cat> = from.map {
         Cat(
             it.id,
             it.url,

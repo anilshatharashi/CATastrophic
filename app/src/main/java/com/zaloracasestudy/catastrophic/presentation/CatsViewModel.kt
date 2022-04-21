@@ -41,12 +41,11 @@ class CatsViewModel @Inject constructor(
         if (currentPage > 1) _isNextPageLoading.postValue(true)
 
         viewModelScope.launch {
-            try {
-                getCatsUseCase.execute(currentPage).collectLatest { result ->
-                    _catListState.value = result?.let { handleSuccess(it) }
-                        ?: Failure(ErrorFetchingCatsData)
+            runCatching {
+                getCatsUseCase.execute(currentPage).collectLatest {
+                    _catListState.value = handleSuccess(it)
                 }
-            } catch (exception: Exception) {
+            }.onFailure {
                 _catListState.value = Failure(UnknownException)
             }
         }

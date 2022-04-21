@@ -2,7 +2,7 @@ package com.zaloracasestudy.catastrophic.data.model
 
 import com.google.gson.annotations.SerializedName
 
-data class CatDataModel(
+data class CatDTO(
     @SerializedName("breeds")
     var breedData: List<BreedData>?,
     @SerializedName("id")

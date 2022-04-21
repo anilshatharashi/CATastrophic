@@ -1,7 +1,7 @@
 package com.zaloracasestudy.catastrophic.data
 
 import com.zaloracasestudy.catastrophic.data.mapper.CatListDomainMapper
-import com.zaloracasestudy.catastrophic.data.model.CatDataModel
+import com.zaloracasestudy.catastrophic.data.model.CatDTO
 import com.zaloracasestudy.catastrophic.data.repository.CatListRepositoryImpl
 import com.zaloracasestudy.catastrophic.data.repository.remote.CatListRemoteDataSource
 import com.zaloracasestudy.catastrophic.domain.mapper.Mapper
@@ -18,7 +18,7 @@ import java.net.UnknownHostException
 
 class CatListRepositoryImplTest {
 
-    private lateinit var mapper: Mapper<List<CatDataModel>?, List<Cat>?>
+    private lateinit var mapper: Mapper<List<CatDTO>?, List<Cat>?>
     private lateinit var remoteDataSource: CatListRemoteDataSource
     private lateinit var repository: CatListRepositoryImpl
 
@@ -31,7 +31,7 @@ class CatListRepositoryImplTest {
 
     @Test
     fun `getCatListList calls a correct function`() = runBlocking {
-        val catListFlow = MutableSharedFlow<List<CatDataModel>>()
+        val catListFlow = MutableSharedFlow<List<CatDTO>>()
         coEvery { remoteDataSource.fetchCatListData(1) } returns catListFlow
 
         repository.getCatList(1)
