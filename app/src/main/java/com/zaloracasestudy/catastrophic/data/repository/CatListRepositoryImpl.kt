@@ -10,7 +10,6 @@ import com.zaloracasestudy.catastrophic.domain.model.Cat
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.toList
 import javax.inject.Inject
 
 class CatListRepositoryImpl @Inject constructor(
@@ -30,8 +29,7 @@ class CatListRepositoryImpl @Inject constructor(
                             id = id ?: "",
                             url = url ?: "",
                             width = width ?: 0,
-                            height = height ?: 0,
-                            page_index = pageIndex).also {
+                            height = height ?: 0).also {
                             Log.i("***", " insertOrUpdate CatEntity = $it")
                         }
                     )
@@ -42,8 +40,15 @@ class CatListRepositoryImpl @Inject constructor(
     }
 
     fun loadCatListFromDb(pageIndex: Int): Flow<List<Cat>> =
-        catDao.getCatList(pageIndex).map { mapper.mapFrom(it).also {
-            Log.i("***", "loaded and mapped CatList = ${it.toList()}")
-        } }
+        catDao.getCatList(pageIndex - BEGINING_FROM_ID, pageIndex + UPTO_ID)
+            .map { mapper.mapFrom(it) }
+
+    companion object {
+        // Better way of doing this is, set these values in domain or repository and use it from there in RecyclerViewPaginationListener
+        // But for now, I just declared as constants here as these depends on the constant values of
+        // RecyclerViewPaginationListener
+        const val BEGINING_FROM_ID = 1
+        const val UPTO_ID = 19
+    }
 
 }

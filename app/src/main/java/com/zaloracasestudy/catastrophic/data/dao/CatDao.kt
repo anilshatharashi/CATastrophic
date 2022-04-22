@@ -7,8 +7,8 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface CatDao {
 
-    @Query("SELECT * FROM cat WHERE page_index= :pageNo ")
-    fun getCatList(pageNo: Int): Flow<List<CatEntity>>
+    @Query("SELECT * FROM cat WHERE _id BETWEEN :fromId AND :toId")
+    fun getCatList(fromId: Int, toId: Int): Flow<List<CatEntity>>
 
     @Transaction
     suspend fun insertOrUpdate(catEntity: CatEntity) {

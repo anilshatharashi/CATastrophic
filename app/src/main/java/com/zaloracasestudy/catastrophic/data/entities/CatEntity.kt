@@ -11,5 +11,4 @@ data class CatEntity(
     val url: String,
     val width: Long,
     val height: Long,
-    val page_index: Int = 0,
 )
