@@ -9,24 +9,34 @@ import com.zaloracasestudy.catastrophic.presentation.mapper.CatListUiMapper
 import io.mockk.coEvery
 import io.mockk.mockk
 import io.mockk.verify
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.test.UnconfinedTestDispatcher
+import kotlinx.coroutines.test.resetMain
+import kotlinx.coroutines.test.runTest
+import kotlinx.coroutines.test.setMain
+import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 
+@ExperimentalCoroutinesApi
 class CatsViewModelTest {
 
-    private lateinit var catList: MutableSharedFlow<List<Cat>?>
+    private lateinit var catList: MutableSharedFlow<List<Cat>>
     private lateinit var viewModel: CatsViewModel
     private lateinit var getCatsListUseCase: GetCatsUseCase
     private lateinit var uiMapper: CatListUiMapper
+    private val dispatcher = UnconfinedTestDispatcher()
 
     @get:Rule
     val taskExecutor = InstantTaskExecutorRule()
 
     @Before
     fun setUp() {
+        Dispatchers.setMain(dispatcher)
         getCatsListUseCase = mockk()
         catList = MutableSharedFlow()
 
@@ -37,12 +47,12 @@ class CatsViewModelTest {
     }
 
     @Test
-    fun `page should be error page if null is returned`() {
+    fun `page should be empty page if emptylist is returned`() {
 
         observeState {
             viewModel.fetchCatList()
-            runBlocking { catList.emit(null) }
-            verify { it.onChanged(CatListState.Failure(ErrorFetchingCatsData)) }
+            runTest { catList.emit(emptyList()) }
+            verify { it.onChanged(Success(emptyList())) }
         }
     }
 
@@ -82,7 +92,7 @@ class CatsViewModelTest {
 
             // AND there is a catList for both ids
             val list1 = listOf(Cat(), Cat(id = "42"), Cat(id = "52"))
-            val list2 =listOf(Cat(id = "382"), Cat(id = "242"), Cat(id = "2542"))
+            val list2 = listOf(Cat(id = "382"), Cat(id = "242"), Cat(id = "2542"))
             runBlocking {
                 firstPageFlow.emit(list1)
                 secondPageFlow.emit(list2)
@@ -96,6 +106,11 @@ class CatsViewModelTest {
                 it.onChanged(Success(uiMapper.mapFrom(list1)))
             }
         }
+    }
+
+    @After
+    fun tearDown() {
+        Dispatchers.resetMain()
     }
 
     private fun observeState(block: (Observer<CatListState>) -> Unit) {

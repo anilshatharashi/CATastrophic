@@ -1,5 +1,6 @@
 package com.zaloracasestudy.catastrophic.di
 
+import com.zaloracasestudy.catastrophic.platform.NetworkHandler
 import com.zaloracasestudy.catastrophic.data.dao.CatDao
 import com.zaloracasestudy.catastrophic.data.entities.CatEntity
 import com.zaloracasestudy.catastrophic.data.mapper.CatListDomainMapper
@@ -27,8 +28,9 @@ object RepositoryModule {
     @Provides
     fun provideCatListRepository(
         remoteDataSource: CatListRemoteDataSource,
+        networkHandler: NetworkHandler,
         catDao: CatDao,
         mapper: Mapper<List<CatEntity>, List<Cat>>,
-    ): CatListRepository = CatListRepositoryImpl(remoteDataSource, catDao, mapper)
+    ): CatListRepository = CatListRepositoryImpl(remoteDataSource, networkHandler, catDao, mapper)
 
 }

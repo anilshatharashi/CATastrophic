@@ -38,7 +38,7 @@ class CatsViewModel @Inject constructor(
 
     fun fetchCatList() {
         val currentPage = pageIndex.value ?: 1
-        if (currentPage > 1) _isNextPageLoading.postValue(true)
+        if (currentPage > 1 && !_isLastPage.value!!) _isNextPageLoading.postValue(true)
 
         viewModelScope.launch {
             runCatching {
@@ -52,7 +52,12 @@ class CatsViewModel @Inject constructor(
     }
 
     private fun handleSuccess(list: List<Cat>): Success {
-        _isLastPage.postValue(false)
+        if (list.isEmpty()) {
+            _isLastPage.postValue(true)
+            _isNextPageLoading.postValue(false)
+        } else {
+            _isLastPage.postValue(false)
+        }
         _isNextPageLoading.postValue(false)
         return Success(mapper.mapFrom(list))
     }
